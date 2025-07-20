@@ -1,12 +1,12 @@
 import css from "./NoteList.module.css";
-import { Note } from "../../types/note";
+import type { Note } from "../../types/note";
 
 interface Props {
   notes: Note[];
   onDelete: (id: string) => void;
 }
 
-export default function NoteList({ notes }: Props) {
+export default function NoteList({ notes, onDelete }: Props) {
   return (
     <ul className={css.list}>
       {notes.map((note) => (

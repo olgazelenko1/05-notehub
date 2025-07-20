@@ -3,8 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Pagination from "../Pagination/Pagination";
 import NoteList from "../NoteList/NoteList";
 import { fetchNotes, deleteNote } from "../../services/noteService";
-import { type NoteResponse } from "../../types/note"; // <-- ось тут
-import css from "./App.module.css";
+import { type NoteResponse } from "../../types/note";
 
 export default function App() {
   const [page, setPage] = useState(1);
