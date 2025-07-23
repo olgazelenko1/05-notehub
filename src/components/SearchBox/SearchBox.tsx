@@ -3,16 +3,26 @@ import css from "./SearchBox.module.css";
 interface SearchBoxProps {
   value: string;
   onChange: (value: string) => void;
+  onSearch?: () => void; // опціонально, щоб обробляти клік по кнопці
 }
 
-export default function SearchBox({ value, onChange }: SearchBoxProps) {
+export default function SearchBox({
+  value,
+  onChange,
+  onSearch,
+}: SearchBoxProps) {
   return (
-    <input
-      className={css.input}
-      type="text"
-      placeholder="Search notes"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
+    <div className={css.searchWrapper}>
+      <input
+        className={css.input}
+        type="text"
+        placeholder="Search notes"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+      <button className={css.button} onClick={onSearch}>
+        Search
+      </button>
+    </div>
   );
 }

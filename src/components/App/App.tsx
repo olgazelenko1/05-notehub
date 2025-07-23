@@ -46,31 +46,36 @@ export default function App() {
   };
 
   return (
-    <div>
+    <div className={css.wrapper}>
       <h1>NoteHub</h1>
 
-      <SearchBox value={search} onChange={setSearch} />
+      <div className={css.header}>
+        <SearchBox value={search} onChange={setSearch} />
+        <button className={css.button} onClick={handleOpenModal}>
+          Create note +
+        </button>
+      </div>
 
-      <button className={css.button} onClick={handleOpenModal}>
-        Create note +
-      </button>
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <NoteForm onSuccess={() => setIsModalOpen(false)} />
         </Modal>
       )}
-      {isLoading && <p>Loading...</p>}
-      {isError && <p>Error loading notes.</p>}
+
+      {isLoading && <p className={css.centered}>Loading...</p>}
+      {isError && <p className={css.centered}>Error loading notes.</p>}
 
       {data && data.notes && data.notes.length > 0 && (
         <NoteList notes={data.notes} onDelete={handleDeleteNote} />
       )}
 
       {data && data.totalPages > 1 && (
-        <Pagination
-          pageCount={data.totalPages}
-          onPageChange={handlePageChange}
-        />
+        <div className={css.centered}>
+          <Pagination
+            pageCount={data.totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
       )}
     </div>
   );
