@@ -10,23 +10,56 @@ const instance = axios.create({
     Authorization: `Bearer ${API_TOKEN}`,
   },
 });
-
 export async function fetchNotes(
   page: number = 1,
-  perPage: number = 12
+  perPage: number = 12,
+  search: string = ""
 ): Promise<NoteResponse> {
-  const response = await instance.get<NoteResponse>("/notes", {
-    params: { page, perPage },
-  });
-  return response.data;
+  try {
+    // Створимо обʼєкт параметрів
+    const params: Record<string, string | number> = {
+      page,
+      perPage,
+    };
+
+    if (search.trim()) {
+      params.search = search.trim();
+    }
+
+    const { data } = await instance.get<NoteResponse>("/notes", { params });
+    console.log("fetchNotes data:", data);
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Axios error:",
+        error.response?.status,
+        error.response?.data
+      );
+    } else {
+      console.error("Unexpected error:", error);
+    }
+    throw error;
+  }
 }
 
-export const createNote = async (data: NewNote): Promise<Note> => {
-  const response = await instance.post<Note>("/notes", data);
-  return response.data;
+// export async function fetchNotes(
+//   page: number = 1,
+//   perPage: number = 12,
+//   search: string = ""
+// ): Promise<NoteResponse> {
+//   const { data } = await instance.get<NoteResponse>("/notes", {
+//     params: { page, perPage, search },
+//   });
+//   return data;
+// }
+
+export const createNote = async (newNote: NewNote): Promise<Note> => {
+  const { data } = await instance.post<Note>("/notes", newNote);
+  return data;
 };
 
-export const deleteNote = async (id: string): Promise<Note> => {
-  const response = await instance.delete<Note>(`/notes/${id}`);
-  return response.data;
-};
+export async function deleteNote(noteId: string): Promise<Note> {
+  const { data } = await instance.delete<Note>(`/notes/${noteId}`);
+  return data;
+}
