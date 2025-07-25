@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
 import Pagination from "../Pagination/Pagination";
 import NoteList from "../NoteList/NoteList";
 import SearchBox from "../SearchBox/SearchBox";
 import Modal from "../Modal/Modal";
 import NoteForm from "../NoteForm/NoteForm";
-import { fetchNotes, deleteNote } from "../../services/noteService";
+import { fetchNotes } from "../../services/noteService";
 import { type NoteResponse } from "../../types/api";
 import css from "./App.module.css";
 
@@ -20,29 +20,14 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 500);
 
-  const queryClient = useQueryClient();
-
   const { data, isLoading, isError } = useQuery<NoteResponse>({
     queryKey: ["notes", page, debouncedSearch],
     queryFn: () => fetchNotes(page, perPage, debouncedSearch),
     placeholderData: (prev) => prev,
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteNote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["notes", page, debouncedSearch],
-      });
-    },
-  });
-
   const handlePageChange = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
-  };
-
-  const handleDeleteNote = (id: string) => {
-    deleteMutation.mutate(id);
   };
 
   const handleSearchChange = (value: string) => {
@@ -74,7 +59,7 @@ export default function App() {
       {isError && <p className={css.centered}>Error loading notes.</p>}
 
       {data && data.notes && data.notes.length > 0 && (
-        <NoteList notes={data.notes} onDelete={handleDeleteNote} />
+        <NoteList notes={data.notes} />
       )}
 
       {data && data.totalPages > 1 && (
