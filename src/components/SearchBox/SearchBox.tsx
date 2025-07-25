@@ -1,28 +1,27 @@
 import css from "./SearchBox.module.css";
 
 interface SearchBoxProps {
-  value: string;
   onChange: (value: string) => void;
-  onSearch?: () => void; // опціонально, щоб обробляти клік по кнопці
+  value?: string;
+  placeholder?: string;
 }
 
 export default function SearchBox({
-  value,
   onChange,
-  onSearch,
+  value,
+  placeholder,
 }: SearchBoxProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+  };
+
   return (
-    <div className={css.searchWrapper}>
-      <input
-        className={css.input}
-        type="text"
-        placeholder="Search notes"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
-      <button className={css.button} onClick={onSearch}>
-        Search
-      </button>
-    </div>
+    <input
+      type="search"
+      className={css.searchInput}
+      value={value}
+      onChange={handleChange}
+      placeholder={placeholder}
+    />
   );
 }

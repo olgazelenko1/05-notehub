@@ -7,7 +7,7 @@ import SearchBox from "../SearchBox/SearchBox";
 import Modal from "../Modal/Modal";
 import NoteForm from "../NoteForm/NoteForm";
 import { fetchNotes, deleteNote } from "../../services/noteService";
-import { type NoteResponse } from "../../types/note";
+import { type NoteResponse } from "../../types/api";
 import css from "./App.module.css";
 
 export default function App() {
@@ -45,12 +45,17 @@ export default function App() {
     deleteMutation.mutate(id);
   };
 
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
+
   return (
     <div className={css.wrapper}>
       <h1>NoteHub</h1>
 
       <div className={css.header}>
-        <SearchBox value={search} onChange={setSearch} />
+        <SearchBox value={search} onChange={handleSearchChange} />
         <button className={css.button} onClick={handleOpenModal}>
           Create note +
         </button>
@@ -58,7 +63,10 @@ export default function App() {
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <NoteForm onSuccess={() => setIsModalOpen(false)} />
+          <NoteForm
+            onSuccess={() => setIsModalOpen(false)}
+            onCancel={() => setIsModalOpen(false)}
+          />
         </Modal>
       )}
 
@@ -73,6 +81,7 @@ export default function App() {
         <div className={css.centered}>
           <Pagination
             pageCount={data.totalPages}
+            currentPage={page}
             onPageChange={handlePageChange}
           />
         </div>

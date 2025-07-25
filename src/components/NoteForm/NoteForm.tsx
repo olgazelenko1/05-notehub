@@ -7,6 +7,7 @@ import type { NewNote } from "../../types/note";
 
 interface NoteFormProps {
   onSuccess: () => void;
+  onCancel: () => void;
 }
 
 const validationSchema = Yup.object({
@@ -28,7 +29,7 @@ const initialValues: NewNote = {
   tag: "Todo",
 };
 
-export default function NoteForm({ onSuccess }: NoteFormProps) {
+export default function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -85,6 +86,7 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
             type="button"
             className={css.cancelButton}
             disabled={mutation.isPending}
+            onClick={onCancel}
           >
             Cancel
           </button>
